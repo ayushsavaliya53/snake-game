@@ -33,7 +33,7 @@ body {
 
 #snake {
   /* display: flex; */
-  position: absolute;
+  /* position: absolute; */
 }
 
 .snake-body {
@@ -44,7 +44,7 @@ body {
   border: 3px solid rgba(255, 255, 255);
   left: 0px;
   top: 0px;
-  position: relative;
+  position: absolute;
 }
 
 #fruit {

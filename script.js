@@ -1,5 +1,3 @@
-document.getElementById('snake').innerHTML += '<div class="snake-body"></div>'
-
 let mainbox = document.getElementById('mainbox')
 let snake = document.getElementById('snake')
 let sBody = document.getElementsByClassName('snake-body')
@@ -8,6 +6,7 @@ let len = sBody.length
 let rtop = parseInt(Math.random() * 13) * 50
 let rleft = parseInt(Math.random() * 13) * 50
 let startUp, startDown, startRight, startLeft;
+let uppressed = false, downpressed = false, rightpressed = false, leftpressed = false
 
 fruit.style.top = rtop + 'px'
 fruit.style.left = rleft + 'px'
@@ -17,78 +16,106 @@ sBody[0].style.left = '0px'
 document.body.addEventListener('keydown', function(eve) {
   switch (eve.key) {
     case "ArrowDown":
-      moveDown();
+      if (uppressed == false) {
+        leftpressed = false
+        rightpressed = false
+        downpressed = true
+        moveDown();
+      }
       break;
     case "ArrowUp":
-      moveUp();
+      if (downpressed == false) {
+        leftpressed = false
+        rightpressed = false
+        uppressed = true
+        moveUp();
+      }
       break;
     case "ArrowLeft":
-      moveLeft();
+      if (rightpressed == false) {
+        uppressed = false
+        downpressed = false
+        leftpressed = true
+        moveLeft();
+      }
       break;
     case "ArrowRight":
-      moveRight();
+      if (leftpressed == false) {
+        uppressed = false
+        downpressed = false
+        rightpressed = true
+        moveRight();
+      }
       break;
   }
 })
 
-console.log(fruit.style.top)
-console.log(fruit.style.left)
-let moveDown = () => {
-  clearInterval(startUp)
-  clearInterval(startLeft)
-  clearInterval(startRight)
-  if (sBody[0].style.top == fruit.style.top && sBody[0].style.left == fruit.style.left) {
-    snake.innerHTML += '<div class="snake-body"></div>'
-    sBody[len - 1].style.top = '0px'
-    sBody[len - 1].style.left = '0px'
-  }
-  startDown = setInterval(
-    () => {
-      for (let i = 0; i < len; i++) {
-        sBody[i].style.top = (parseInt(sBody[i].style.top.slice(0, -2)) + 50) + 'px'
-      }
-    }, 200)
-}
-let moveUp = () => {
-  clearInterval(startDown)
-  clearInterval(startLeft)
-  clearInterval(startRight)
-  if (sBody[0].style.top == fruit.style.top && sBody[0].style.left == fruit.style.left) {
-    snake.innerHTML += '<div class="snake-body"></div>'
+let moveDown = (lwrind, hrind) => {
+
+  if (downpressed) {
+    if (sBody[0].style.top.slice(0, -2) < 600) {
+      startDown = setTimeout(() => {
+        sBody[0].style.top = parseInt(sBody[0].style.top.slice(0, -2)) + 50 + 'px'
+        // if (eat()) {
+        //   sBody[1].style.top = parseInt(sBody[0].style.top.slice(0, -2)) - 50 + 'px'
+        //   sBody[1].style.left = sBody[0].style.left
+        // }
+        moveDown()
+      }, 500)
+    } else { downpressed = false }
 
   }
-  startUp = setInterval(
-    () => {
-      for (let i = 0; i < len; i++) {
-        sBody[i].style.top = (parseInt(sBody[i].style.top.slice(0, -2)) - 50) + 'px'
-      }
-    }, 200)
+
 }
-let moveRight = () => {
-  clearInterval(startUp)
-  clearInterval(startDown)
-  clearInterval(startLeft)
-  if (sBody[0].style.top == fruit.style.top && sBody[0].style.left == fruit.style.left) {
-    snake.innerHTML += '<div class="snake-body"></div>'
+let moveUp = (lwrind, hrind) => {
+  if (uppressed) {
+    if (sBody[0].style.top.slice(0, -2) > 0) {
+      startUp = setTimeout(() => {
+        sBody[0].style.top = parseInt(sBody[0].style.top.slice(0, -2)) - 50 + 'px'
+        // if (eat()) {
+        //   sBody[1].style.top = parseInt(sBody[0].style.top.slice(0, -2)) + 50 + 'px'
+        //   sBody[1].style.left = sBody[0].style.left
+        // }
+        moveUp()
+      }, 500)
+    } else { uppressed = false }
   }
-  startRight = setInterval(
-    () => {
-      for (let i = 0; i < len; i++) {
-        sBody[i].style.left = (parseInt(sBody[i].style.left.slice(0, -2)) + 50) + 'px'
-      }
-    }, 200)
 }
-let moveLeft = () => {
-  clearInterval(startUp)
-  clearInterval(startDown)
-  clearInterval(startRight)
-  if (sBody[0].style.top == fruit.style.top && sBody[0].style.left == fruit.style.left) {
-    snake.innerHTML += '<div class="snake-body"></div>'
+let moveRight = (lwrind, hrind) => {
+  if (rightpressed) {
+    if (sBody[0].style.left.slice(0, -2) < 600) {
+      startRight = setTimeout(() => {
+        sBody[0].style.left = parseInt(sBody[0].style.left.slice(0, -2)) + 50 + 'px'
+        // if (eat()) {
+        //   sBody[1].style.left = parseInt(sBody[0].style.left.slice(0, -2)) - 50 + 'px'
+        //   sBody[1].style.top = sBody[0].style.top
+        // }
+        moveRight()
+      }, 500)
+    } else { rightpressed = false }
   }
-  startLeft = setInterval(
-    () => {
-      for (let i = 0; i < len; i++) {
-        sBody[i].style.left = (parseInt(sBody[i].style.left.slice(0, -2)) - 50) + 'px'
-      }
-    }, 200)
 }
+let moveLeft = (lwrind, hrind) => {
+  if (leftpressed) {
+    if (sBody[0].style.left.slice(0, -2) > 0) {
+      startLeft = setTimeout(() => {
+        sBody[0].style.left = parseInt(sBody[0].style.left.slice(0, -2)) - 50 + 'px'
+        // if (eat()) {
+        //   sBody[1].style.left = parseInt(sBody[0].style.left.slice(0, -2)) + 50 + 'px'
+        //   sBody[1].style.top = sBody[0].style.top
+        // }
+        moveLeft()
+      }, 500)
+    } else { leftpressed = false }
+  }
+}
+
+// let eat = () => {
+//   if (sBody[0].style.top.slice(0, -2) == fruit.style.top.slice(0, -2) && sBody[0].style.left.slice(0, -2) == fruit.style.left.slice(0, -2)) {
+//     fruit.style.top = rtop + 'px'
+//     fruit.style.left = rleft + 'px'
+//     len += 1
+//     snake.insertBefore(sBody[0].cloneNode(true), sBody[0])
+//     return true
+//   }
+// }
